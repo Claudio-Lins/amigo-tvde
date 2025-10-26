@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { Fuel, LayoutDashboardIcon, UserIcon } from "lucide-react";
+import { DollarSign, Fuel, LayoutDashboardIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GiMeal } from "react-icons/gi";
@@ -64,6 +64,22 @@ export function SidebarContentDriver() {
                 <Link href="/driver/food" className="flex items-center gap-2">
                   <GiMeal className="size-6" />
                   <span>Alimentação</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className={cn(pathname === "/driver/earnings" && "bg-primary text-primary-foreground")}
+              >
+                <Link href="/driver/earnings" className="flex items-center gap-2">
+                  <DollarSign className="size-6" />
+                  <span>Ganhos</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

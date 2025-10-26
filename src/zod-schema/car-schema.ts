@@ -12,6 +12,7 @@ export const CarSchema = z.object({
   // Detalhes do carro
   brand: z.string(),
   model: z.string(),
+  color: z.string().optional().nullable(),
   type: CarTypeEnum,
   year: z.number().int().optional().nullable(),
   tag: z.string().optional().nullable(),

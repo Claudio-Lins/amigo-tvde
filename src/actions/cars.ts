@@ -63,6 +63,7 @@ export async function createCar(data: {
   driverId?: string | null;
   brand: string;
   model: string;
+  color?: string | null;
   type: "ELECTRIC" | "DIESEL" | "GPL" | "HYBRID";
   year?: number | null;
   tag?: string | null;
@@ -74,6 +75,7 @@ export async function createCar(data: {
       driverId?: string;
       brand: string;
       model: string;
+      color?: string | null;
       type: "ELECTRIC" | "DIESEL" | "GPL" | "HYBRID";
       year?: number;
       tag?: string;
@@ -82,6 +84,7 @@ export async function createCar(data: {
     } = {
       brand: data.brand,
       model: data.model,
+      color: data.color,
       type: data.type,
     };
 
@@ -109,6 +112,7 @@ export async function updateCar(
     driverId: string | null;
     brand: string;
     model: string;
+    color?: string | null;
     type: "ELECTRIC" | "DIESEL" | "GPL" | "HYBRID";
     year: number | null;
     tag: string | null;
@@ -121,6 +125,7 @@ export async function updateCar(
       driverId?: string | null;
       brand?: string;
       model?: string;
+      color?: string | null;
       type?: "ELECTRIC" | "DIESEL" | "GPL" | "HYBRID";
       year?: number | null;
       tag?: string | null;
@@ -131,6 +136,7 @@ export async function updateCar(
     // Copy all fields except rentPrice and driverId (they need special handling)
     if (data.brand !== undefined) updateData.brand = data.brand;
     if (data.model !== undefined) updateData.model = data.model;
+    if (data.color !== undefined) updateData.color = data.color;
     if (data.type !== undefined) updateData.type = data.type;
     if (data.year !== undefined) updateData.year = data.year;
     if (data.tag !== undefined) updateData.tag = data.tag;

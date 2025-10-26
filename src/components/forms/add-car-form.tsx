@@ -43,6 +43,7 @@ export function AddCarForm({ drivers, triggerButton }: AddCarFormProps) {
       driverId: null,
       brand: "",
       model: "",
+      color: "",
       type: "ELECTRIC",
       year: null,
       tag: null,
@@ -60,6 +61,7 @@ export function AddCarForm({ drivers, triggerButton }: AddCarFormProps) {
         driverId: values.driverId === "none" ? null : values.driverId || null,
         brand: values.brand,
         model: values.model,
+        color: values.color,
         type: values.type,
         year: values.year,
         tag: values.tag,
@@ -179,6 +181,21 @@ export function AddCarForm({ drivers, triggerButton }: AddCarFormProps) {
                       <FormControl>
                         <Input placeholder="Ex: Model 3, i3, Prius" {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="color"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cor</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex: Azul, Branco, Preto" {...field} value={field.value ?? ""} />
+                      </FormControl>
+                      <FormDescription>Cor do veículo (opcional)</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

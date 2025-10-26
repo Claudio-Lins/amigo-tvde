@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { CarSchema } from "./car-schema";
 import { EnergyLogSchema } from "./energy-log-schema";
-import { FoodExpenseSchema } from "./food-expense-schema";
+
+import { CreateFoodExpenseSchema } from "./food-expense-schema";
 import { MileageSchema } from "./mileage-schema";
 import { UserSchema } from "./user-schema";
 
@@ -42,7 +43,7 @@ export const DriverProfileSchema = z.object({
   // Relacionamentos opcionais
   cars: z.array(CarSchema).optional(),
   mileage: z.array(MileageSchema).optional(),
-  foodExpenses: z.array(FoodExpenseSchema).optional(),
+  foodExpenses: z.array(CreateFoodExpenseSchema).optional(),
   energyLogs: z.array(EnergyLogSchema).optional(),
 });
 
@@ -62,7 +63,7 @@ export const UpdateDriverProfileSchema = DriverProfileSchema.partial().extend({
   updatedAt: z.date().default(() => new Date()),
   cars: z.array(CarSchema).optional(),
   mileage: z.array(MileageSchema).optional(),
-  foodExpenses: z.array(FoodExpenseSchema).optional(),
+  foodExpenses: z.array(CreateFoodExpenseSchema).optional(),
   energyLogs: z.array(EnergyLogSchema).optional(),
 });
 
@@ -70,7 +71,7 @@ export const DriverProfileRelations = z.object({
   user: UserSchema.optional().nullable(),
   cars: z.array(CarSchema).optional().nullable(),
   mileage: z.array(MileageSchema).optional().nullable(),
-  foodExpenses: z.array(FoodExpenseSchema).optional().nullable(),
+  foodExpenses: z.array(CreateFoodExpenseSchema).optional().nullable(),
   energyLogs: z.array(EnergyLogSchema).optional().nullable(),
 });
 

@@ -48,6 +48,7 @@ export function EditCarForm({ car, drivers }: EditCarFormProps) {
       driverId: car.driverId ?? null,
       brand: car.brand,
       model: car.model,
+      color: car.color ?? null,
       type: car.type,
       year: car.year ?? null,
       tag: car.tag ?? null,
@@ -65,6 +66,7 @@ export function EditCarForm({ car, drivers }: EditCarFormProps) {
         driverId: values.driverId === "none" ? null : values.driverId,
         brand: values.brand,
         model: values.model,
+        color: values.color,
         type: values.type,
         year: values.year,
         tag: values.tag,
@@ -183,6 +185,21 @@ export function EditCarForm({ car, drivers }: EditCarFormProps) {
                       <FormControl>
                         <Input placeholder="Ex: Model 3, i3, Prius" {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="color"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cor</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex: Azul, Branco, Preto" {...field} value={field.value ?? ""} />
+                      </FormControl>
+                      <FormDescription>Cor do veículo (opcional)</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

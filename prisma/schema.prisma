@@ -42,6 +42,19 @@ enum Gender {
   OTHER
 }
 
+enum EarningSource {
+  UBER
+  BOLT
+  TOUR
+  OTHER
+}
+
+enum PaymentType {
+  CASH
+  BANK_TRANSFER
+  MBWAY
+  OTHER
+}
 
 model User {
   id              String    @id
@@ -145,6 +158,7 @@ model DriverProfile {
   foodExpenses  FoodExpense[]
   energyLogs    EnergyLog[]
 
+
   @@map("driver_profile")
 }
 
@@ -231,3 +245,31 @@ model EnergyLog {
   @@map("energy_log")
 }
 
+model EarningBatch {
+  id          String   @id @default(cuid())
+  driverId    String
+  source      EarningSource
+  weekStart   DateTime
+  weekEnd     DateTime
+  totalAmount Decimal
+  paymentDate DateTime
+  paymentType PaymentType
+  referenceId String?
+  earnings    Earning[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@map("earning_batch")
+}
+
+model Earning {
+  id           String   @id @default(cuid())
+  batchId      String?
+  batch        EarningBatch? @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  date         DateTime
+  description  String?
+  amount       Decimal
+
+  @@map("earning")
+}
