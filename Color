@@ -1,0 +1,18 @@
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "amigo-tvde-db", schema "public" at "localhost:5435"
+
+Applying migration `20251026140632_update`
+
+The following migration(s) have been created and applied from new schema changes:
+
+prisma/migrations/
+  └─ 20251026140632_update/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v6.18.0) to ./src/generated/prisma in 70ms
+
+

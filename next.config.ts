@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "platform-lookaside.fbsbx.com",
       },
+      {
+        protocol: "https",
+        hostname: "product-detail-www-opennext.snc-prod.aws.cinch.co.uk",
+      },
     ],
   },
 };

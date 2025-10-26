@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { CarIcon, LayoutDashboardIcon, UsersIcon } from "lucide-react";
+import { CarIcon, LayoutDashboardIcon, UserIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GiMeal } from "react-icons/gi";
@@ -28,6 +28,16 @@ export function SidebarContentDriver() {
                 <Link href="/driver" className="flex items-center gap-2">
                   <LayoutDashboardIcon className="size-6" />
                   <span>Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className={cn(pathname === "/driver/driver-profile" && "bg-primary text-primary-foreground")}
+              >
+                <Link href="/driver/driver-profile" className="flex items-center gap-2">
+                  <UserIcon className="size-6" />
+                  <span>Meu Perfil</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

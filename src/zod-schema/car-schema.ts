@@ -4,7 +4,7 @@ export const CarTypeEnum = z.enum(["ELECTRIC", "DIESEL", "GPL", "HYBRID"]);
 
 export const CarSchema = z.object({
   id: z.string().cuid(),
-  driverId: z.string(),
+  driverId: z.string().optional().nullable(),
 
   // Relação com DriverProfile (opcional se estiver apenas lendo)
   driver: z.any().optional(),
@@ -18,11 +18,7 @@ export const CarSchema = z.object({
   image: z.string().optional().nullable(),
 
   // Finanças
-  rentPrice: z
-    .union([z.string(), z.number()])
-    .optional()
-    .nullable()
-    .transform((val) => (val === null || val === undefined ? null : typeof val === "string" ? parseFloat(val) : val)),
+  rentPrice: z.number().optional().nullable(),
 
   // Relações
   energyLogs: z.array(z.any()).optional(),
@@ -39,12 +35,16 @@ export const CreateCarSchema = CarSchema.omit({
   energyLogs: true,
 });
 
-export const UpdateCarSchema = CarSchema.partial().extend({
-  id: z.string().cuid(),
-  createdAt: z.date().default(() => new Date()),
-  updatedAt: z.date().default(() => new Date()),
-  energyLogs: z.array(z.any()).optional(),
-});
+export const UpdateCarSchema = CarSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  energyLogs: true,
+  driver: true,
+})
+  .partial()
+  .extend({
+    id: z.string().cuid(),
+  });
 
 export type Car = z.infer<typeof CarSchema>;
 export type CreateCarInput = z.infer<typeof CreateCarSchema>;

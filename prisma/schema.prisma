@@ -150,10 +150,11 @@ model DriverProfile {
 
 model Car {
   id         String   @id @default(cuid())
-  driverId   String
-  driver     DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId   String?
+  driver     DriverProfile? @relation(fields: [driverId], references: [id], onDelete: Cascade)
   brand      String
   model      String
+  color      String?
   type       CarType
   year       Int?
   tag        String?
