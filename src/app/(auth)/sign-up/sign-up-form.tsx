@@ -18,7 +18,7 @@ import { z } from "zod";
 
 const signUpSchema = z
   .object({
-    name: z.string().min(1, { message: "Name is required" }),
+    fullName: z.string().min(1, { message: "Name is required" }),
     email: z.email({ message: "Please enter a valid email" }),
     password: passwordSchema,
     passwordConfirmation: z.string().min(1, { message: "Please confirm password" }),
@@ -41,7 +41,7 @@ export function SignUpForm() {
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: "",
+      fullName: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -49,13 +49,13 @@ export function SignUpForm() {
     },
   });
 
-  async function onSubmit({ email, password, name, acceptedTerms }: SignUpValues) {
+  async function onSubmit({ email, password, fullName, acceptedTerms }: SignUpValues) {
     setError(null);
 
     const { error } = await authClient.signUp.email({
       email,
       password,
-      name,
+      fullName,
       acceptedTerms,
       callbackURL: "/email-verified",
       ...(acceptedTerms && { acceptedTermsAt: new Date() }),
@@ -81,7 +81,7 @@ export function SignUpForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>

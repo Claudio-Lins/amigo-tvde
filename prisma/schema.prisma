@@ -16,23 +16,52 @@ datasource db {
 }
 
 enum UserRole {
-  USER
   ADMIN
+  MANAGER
+  DRIVER
 }
+
+
+enum CarType {
+  ELECTRIC
+  DIESEL
+  GPL
+  HYBRID
+}
+
+enum EnergyType {
+  ELECTRIC
+  DIESEL
+  GPL
+  HYBRID
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 
 model User {
   id              String    @id
-  name            String
+  name            String?
+  fullName        String?
   email           String
   emailVerified   Boolean   @default(false)
   image           String?
-  role            UserRole    @default(USER)
+  role            UserRole  @default(DRIVER)
+  banned          Boolean   @default(false)
+  banReason       String?
+  banExpires      DateTime?
   acceptedTerms   Boolean   @default(false)
   acceptedTermsAt DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
+
   sessions        Session[]
   accounts        Account[]
+  driverProfile   DriverProfile?
 
   @@unique([email])
   @@map("user")
@@ -82,3 +111,122 @@ model Verification {
 
   @@map("verification")
 }
+
+model DriverProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  firstName    String
+  lastName     String
+  birthday     DateTime?
+  gender       Gender?
+  nationality  String?
+  photo        String?
+  
+  // Bank account
+  bankName     String?
+  iban         String?
+  accountNumber String?
+
+  // Address
+  street       String?
+  number       String?
+  complement   String?
+  neighborhood String?
+  city         String?
+  district     String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  cars          Car[]
+  mileage       Mileage[]
+  foodExpenses  FoodExpense[]
+  energyLogs    EnergyLog[]
+
+  @@map("driver_profile")
+}
+
+model Car {
+  id         String   @id @default(cuid())
+  driverId   String
+  driver     DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  brand      String
+  model      String
+  type       CarType
+  year       Int?
+  tag        String?
+  image      String?
+  rentPrice  Decimal?
+
+  energyLogs    EnergyLog[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("car")
+}
+
+model Mileage {
+  id         String   @id @default(cuid())
+  driverId   String
+  driver     DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  kmInitialDaily  Int?
+  kmFinalDaily    Int?
+  kmInitialWeekly Int?
+  kmFinalWeekly   Int?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("mileage")
+}
+
+model FoodExpense {
+  id        String   @id @default(cuid())
+  driverId  String
+  driver    DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  locale    String
+  date      DateTime
+  amount    Decimal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("food_expense")
+}
+
+model EnergyLog {
+  id             String   @id @default(cuid())
+  driverId       String
+  driver         DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  carId          String?
+  car            Car?     @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  locale         String              // Ex: Lidl, Ionity, Galp, Tesla Supercharger
+  energyType     EnergyType          // ELECTRIC, DIESEL, GPL, HYBRID
+  timestamp      DateTime            // Data/hora do carregamento ou abastecimento
+  totalCost      Decimal               // Valor total pago
+  paymentMethod  String?             // Cartão, MB Way, etc.
+
+  // Campos específicos por tipo
+  kWhCharged     Int?              // Para elétricos
+  pricePerKWh    Decimal?              // €/kWh
+  chargingTime   Int?                // Minutos (para elétricos)
+
+  liters         Int?              // Para combustão
+  pricePerLiter  Decimal?              // €/L
+
+  batteryBefore  Int?              // Percentual de bateria antes (%)
+  batteryAfter   Int?              // Percentual após (%)
+  fuelBefore     Int?              // Percentual tanque antes (%)
+  fuelAfter      Int?              // Percentual tanque após (%)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  @@map("energy_log")
+}
+

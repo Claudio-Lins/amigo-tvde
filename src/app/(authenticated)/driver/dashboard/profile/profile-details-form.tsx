@@ -44,29 +44,11 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
     setStatus(null);
     setError(null);
 
-    const { error } = await authClient.updateUser({ name, image });
-
+    const { error } = await authClient.updateUser({ fullName: name, image: image ?? undefined });
     if (error) {
       setError(error.message || "Failed to update profile");
-    } else {
-      setStatus("Profile updated");
-      router.refresh();
     }
   }
-
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        form.setValue("image", base64, { shouldDirty: true });
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  const imagePreview = form.watch("image");
 
   const loading = form.formState.isSubmitting;
 
@@ -99,16 +81,16 @@ export function ProfileDetailsForm({ user }: ProfileDetailsFormProps) {
                 <FormItem>
                   <FormLabel>Profile image</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => handleImageChange(e)} />
+                    <Input type="file" accept="image/*" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {imagePreview && (
+            {user.image && (
               <div className="relative size-16">
-                <UserAvatar name={user.name} image={imagePreview} className="size-16" />
+                <UserAvatar name={user.name} image={user.image} className="size-16" />
                 <Button
                   type="button"
                   variant="ghost"

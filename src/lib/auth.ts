@@ -34,7 +34,7 @@ export const auth = betterAuth({
         to: user.email,
         subject: "🔐 Redefinir sua senha",
         template: "password-reset",
-        userName: user.name,
+        userName: (user as any).fullName || user.name,
         url,
       });
     },
@@ -54,7 +54,7 @@ export const auth = betterAuth({
         to: user.email,
         subject: "✨ Verificar seu email",
         template: "email-verification",
-        userName: user.name,
+        userName: (user as any).fullName || user.name,
         url,
       });
     },
@@ -74,7 +74,7 @@ export const auth = betterAuth({
           to: user.email,
           subject: "📧 Confirmar mudança de email",
           template: "email-change",
-          userName: user.name,
+          userName: (user as any).fullName || user.name,
           url,
           newEmail,
         });
@@ -82,8 +82,26 @@ export const auth = betterAuth({
     },
     additionalFields: {
       role: {
-        type: ["USER", "ADMIN"],
+        type: ["DRIVER", "MANAGER", "ADMIN"],
         input: false,
+      },
+      fullName: {
+        type: "string",
+        input: true,
+      },
+      banned: {
+        type: "boolean",
+        input: false,
+      },
+      banReason: {
+        type: "string",
+        input: false,
+        required: false,
+      },
+      banExpires: {
+        type: "date",
+        input: false,
+        required: false,
       },
       acceptedTerms: {
         type: "boolean",
@@ -108,7 +126,7 @@ export const auth = betterAuth({
       },
     }),
     admin({
-      defaultRole: "USER",
+      defaultRole: "DRIVER",
       adminRoles: ["ADMIN"],
     }),
   ],
@@ -128,12 +146,28 @@ export const auth = betterAuth({
   after: createAuthMiddleware(async (ctx) => {
     if (ctx.path.includes("/callback/")) {
       if (ctx.context.newUser) {
+        const user = await prisma.user.findUnique({
+          where: { id: ctx.context.newUser.id },
+        });
+
+        // Sincronizar name com fullName - garantir que fullName sempre tenha um valor
+        const updateData: Record<string, unknown> = {
+          acceptedTerms: true,
+          acceptedTermsAt: new Date(),
+        };
+
+        // Se fullName estiver vazio mas name tiver valor, copiar name para fullName
+        if (!user?.fullName && user?.name) {
+          updateData.fullName = user.name;
+        }
+        // Se ambos estiverem vazios, usar o email como fallback
+        else if (!user?.fullName && !user?.name) {
+          updateData.fullName = user?.email || "Usuário";
+        }
+
         await prisma.user.update({
           where: { id: ctx.context.newUser.id },
-          data: {
-            acceptedTerms: true,
-            acceptedTermsAt: new Date(),
-          },
+          data: updateData,
         });
       }
     }

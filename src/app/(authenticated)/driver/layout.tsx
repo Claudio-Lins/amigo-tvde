@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { getServerSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 
-export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function DriverLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const session = await getServerSession();
   const user = session?.user;
 
@@ -12,8 +12,8 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
     redirect("/sign-in");
   }
 
-  // Se o usuário não é ADMIN, redirecionar para página não autorizada
-  if (user.role !== "ADMIN") {
+  // Se o usuário não é DRIVER, redirecionar para página não autorizada
+  if (user.role !== "DRIVER") {
     redirect("/unauthorized");
   }
 

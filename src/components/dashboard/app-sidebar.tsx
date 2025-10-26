@@ -1,11 +1,12 @@
-import codingInFlowLogo from "@/assets/coding_in_flow_logo.jpg";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Sidebar, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { UserDropdown } from "@/components/user-dropdown";
 import { getServerSession } from "@/lib/get-session";
-import Image from "next/image";
 import Link from "next/link";
-import { SidebarContentClient } from "./sidebar-content";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { SidebarContentAdmin } from "./sidebar-content-admin";
+import { SidebarContentDriver } from "./sidebar-content-driver";
+import { SidebarContentManager } from "./sidebar-content-manager";
 
 // Sample sidebar component
 export async function AppSidebar() {
@@ -13,6 +14,8 @@ export async function AppSidebar() {
   const user = session?.user;
 
   const isAdmin = user?.role === "ADMIN";
+  const isManager = user?.role === "MANAGER";
+  const isDriver = user?.role === "DRIVER";
 
   if (!user) return null;
 
@@ -21,17 +24,13 @@ export async function AppSidebar() {
       <SidebarHeader className="bg-background border-b flex flex-row items-center justify-start">
         {/* <SidebarTrigger /> */}
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Image
-            src={codingInFlowLogo || ""}
-            alt="Coding in Flow logo"
-            width={32}
-            height={32}
-            className="border-muted rounded-full border"
-          />
-          Better-Authenticate
+          <LuLayoutDashboard className="size-8" />
+          {isAdmin ? "Admin" : isManager ? "Manager" : isDriver ? "Driver" : ""}
         </Link>
       </SidebarHeader>
-      <SidebarContentClient isAdmin={isAdmin} />
+      {isAdmin && <SidebarContentAdmin />}
+      {isManager && <SidebarContentManager />}
+      {isDriver && <SidebarContentDriver />}
       <SidebarFooter>
         <div className="flex items-center gap-2">
           <ModeToggle />

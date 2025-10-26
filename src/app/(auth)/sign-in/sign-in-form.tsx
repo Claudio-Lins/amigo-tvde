@@ -87,14 +87,21 @@ export function SignInForm() {
               if (userRole === "ADMIN") {
                 console.log("Redirecionando ADMIN para /admin");
                 window.location.href = "/admin";
+              }
+              if (userRole === "MANAGER") {
+                console.log("Redirecionando MANAGER para /manager");
+                window.location.href = "/manager";
+              } else if (userRole === "DRIVER") {
+                console.log("Redirecionando DRIVER para /driver");
+                window.location.href = "/driver";
               } else {
-                console.log("Redirecionando USER para /user");
-                window.location.href = "/user";
+                console.log("Redirecionando para /unauthorized");
+                window.location.href = "/unauthorized";
               }
             }
           } else {
             console.log("Sem dados de usuário, usando fallback");
-            router.push(redirect ?? "/user");
+            router.push(redirect ?? "/unauthorized");
           }
         },
         onError: (ctx) => {

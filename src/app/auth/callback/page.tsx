@@ -31,10 +31,17 @@ export default function AuthCallbackPage() {
             if (userRole === "ADMIN") {
               console.log("Callback - Redirecionando para /admin");
               window.location.href = "/admin";
-            } else {
-              console.log("Callback - Redirecionando para /user");
-              window.location.href = "/user";
             }
+            if (userRole === "MANAGER") {
+              console.log("Callback - Redirecionando para /manager");
+              window.location.href = "/manager";
+            }
+            if (userRole === "DRIVER") {
+              console.log("Callback - Redirecionando para /driver");
+              window.location.href = "/driver";
+            }
+            console.log("Callback - Redirecionando para /unauthorized");
+            window.location.href = "/unauthorized";
           } else {
             console.log("Callback - Sem dados de usuário na sessão");
             // Se não há sessão, redirecionar para login

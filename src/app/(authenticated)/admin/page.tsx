@@ -2,6 +2,7 @@ import { SingOut } from "@/components/auth/sing-out";
 import { RoleDemo } from "@/components/role-demo";
 
 import { getServerSession } from "@/lib/get-session";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -22,7 +23,7 @@ export default async function AdminPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-12">
+    <main className={cn("flex flex-col gap-4")}>
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">Administração</h1>

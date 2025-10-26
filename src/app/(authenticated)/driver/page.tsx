@@ -5,10 +5,10 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Área do Usuário",
+  title: "Área do Motorista",
 };
 
-export default async function UserPage() {
+export default async function DriverPage() {
   const session = await getServerSession();
   const user = session?.user;
 
@@ -20,8 +20,8 @@ export default async function UserPage() {
     <main className={cn("mx-auto w-full max-w-6xl px-4 py-12")}>
       <div className="space-y-6">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">Área do Usuário</h1>
-          <p className="text-muted-foreground">Bem-vindo, {user.name}! Esta é sua área pessoal.</p>
+          <h1 className="text-2xl font-semibold">Área do Motorista</h1>
+          <p className="text-muted-foreground">Bem-vindo, {user.fullName}! Esta é sua área pessoal.</p>
         </div>
         <RoleDemo />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
