@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteRefueling } from "@/actions/refueling";
+import { deleteEarningBatch } from "@/actions/earnings";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,33 +13,38 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import type { EnergyLog } from "@/generated/prisma";
+import type { EarningBatch } from "@/generated/prisma";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type SerializedRefueling = Omit<EnergyLog, "totalCost" | "pricePerKWh" | "pricePerLiter"> & {
-  totalCost: number;
-  pricePerKWh: number | null;
-  pricePerLiter: number | null;
+type SerializedEarningBatch = Omit<EarningBatch, "totalAmount"> & {
+  totalAmount: number;
 };
 
-type DeleteRefuelingFormProps = {
-  refueling: SerializedRefueling;
+type DeleteEarningBatchFormProps = {
+  batch: SerializedEarningBatch;
 };
 
-export function DeleteRefuelingForm({ refueling }: DeleteRefuelingFormProps) {
+const sourceLabels: Record<string, string> = {
+  UBER: "Uber",
+  BOLT: "Bolt",
+  TOUR: "Tour",
+  OTHER: "Outro",
+};
+
+export function DeleteEarningBatchForm({ batch }: DeleteEarningBatchFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleDelete() {
     setIsLoading(true);
     try {
-      await deleteRefueling(refueling.id);
-      toast.success("Registro deletado!", {
-        description: "O abastecimento foi removido.",
+      await deleteEarningBatch(batch.id);
+      toast.success("Lote deletado!", {
+        description: "O lote de ganhos foi removido.",
       });
       setIsOpen(false);
     } catch (error) {
@@ -64,19 +69,20 @@ export function DeleteRefuelingForm({ refueling }: DeleteRefuelingFormProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
-            <span>Tem certeza que deseja deletar este registro?</span>
+            <p>Tem certeza que deseja deletar este lote de ganhos?</p>
             <div className="rounded-lg bg-muted p-3 space-y-1 text-sm">
               <p>
-                <strong>Data:</strong> {format(new Date(refueling.timestamp), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                <strong>Fonte:</strong> {sourceLabels[batch.source]}
               </p>
               <p>
-                <strong>Local:</strong> {refueling.locale}
+                <strong>Período:</strong> {format(new Date(batch.weekStart), "dd/MM/yyyy", { locale: ptBR })} -{" "}
+                {format(new Date(batch.weekEnd), "dd/MM/yyyy", { locale: ptBR })}
               </p>
               <p>
-                <strong>Tipo:</strong> {refueling.energyType}
+                <strong>Valor:</strong> €{batch.totalAmount.toFixed(2)}
               </p>
               <p>
-                <strong>Custo:</strong> €{refueling.totalCost.toFixed(2)}
+                <strong>Pagamento:</strong> {format(new Date(batch.paymentDate), "dd/MM/yyyy", { locale: ptBR })}
               </p>
             </div>
             <p className="text-destructive font-medium">Esta ação não pode ser desfeita.</p>
