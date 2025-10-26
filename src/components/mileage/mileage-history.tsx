@@ -1,5 +1,7 @@
 "use client";
 
+import { DeleteMileageForm } from "@/components/mileage/delete-mileage-form";
+import { EditMileageForm } from "@/components/mileage/edit-mileage-form";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -101,6 +103,12 @@ export function MileageHistory({ mileages }: MileageHistoryProps) {
                             </div>
                           </div>
                         )}
+
+                        {/* Actions */}
+                        <div className="flex justify-end gap-2 pt-3 border-t">
+                          <EditMileageForm mileage={mileage} />
+                          <DeleteMileageForm mileage={mileage} />
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

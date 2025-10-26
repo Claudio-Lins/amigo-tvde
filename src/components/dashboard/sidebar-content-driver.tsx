@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { CarIcon, LayoutDashboardIcon, UserIcon, UsersIcon } from "lucide-react";
+import { Fuel, LayoutDashboardIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GiMeal } from "react-icons/gi";
@@ -46,6 +46,16 @@ export function SidebarContentDriver() {
                 <Link href="/driver/mileage" className="flex items-center gap-2">
                   <IoMdSpeedometer className="size-6" />
                   <span>Kilometragem</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className={cn(pathname === "/driver/refueling" && "bg-primary text-primary-foreground")}
+              >
+                <Link href="/driver/refueling" className="flex items-center gap-2">
+                  <Fuel className="size-6" />
+                  <span>Abastecimento</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -170,6 +170,112 @@ export async function finishMileage(data: { mileageId: string; kmFinalDaily: num
   }
 }
 
+export async function updateMileage(data: {
+  mileageId: string;
+  kmInitialDaily?: number;
+  kmFinalDaily?: number;
+  kmInitialWeekly?: number | null;
+  kmFinalWeekly?: number | null;
+}) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      throw new Error("Usuário não autenticado");
+    }
+
+    const driverProfile = await prisma.driverProfile.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!driverProfile) {
+      throw new Error("Perfil de motorista não encontrado");
+    }
+
+    // Verificar se o registro pertence ao motorista
+    const mileage = await prisma.mileage.findUnique({
+      where: { id: data.mileageId },
+    });
+
+    if (!mileage || mileage.driverId !== driverProfile.id) {
+      throw new Error("Registro de quilometragem não encontrado");
+    }
+
+    // Preparar dados para atualização
+    const updateData: {
+      kmInitialDaily?: number;
+      kmFinalDaily?: number;
+      kmInitialWeekly?: number | null;
+      kmFinalWeekly?: number | null;
+    } = {};
+
+    if (data.kmInitialDaily !== undefined) updateData.kmInitialDaily = data.kmInitialDaily;
+    if (data.kmFinalDaily !== undefined) updateData.kmFinalDaily = data.kmFinalDaily;
+    if (data.kmInitialWeekly !== undefined) updateData.kmInitialWeekly = data.kmInitialWeekly;
+    if (data.kmFinalWeekly !== undefined) updateData.kmFinalWeekly = data.kmFinalWeekly;
+
+    // Validar que km final é maior que km inicial
+    const finalKm = data.kmFinalDaily ?? mileage.kmFinalDaily;
+    const initialKm = data.kmInitialDaily ?? mileage.kmInitialDaily;
+
+    if (finalKm && initialKm && finalKm <= initialKm) {
+      throw new Error("Quilometragem final deve ser maior que a inicial");
+    }
+
+    const updatedMileage = await prisma.mileage.update({
+      where: { id: data.mileageId },
+      data: updateData,
+    });
+
+    revalidatePath("/driver/mileage");
+    return updatedMileage;
+  } catch (error) {
+    console.error("Erro ao atualizar registro:", JSON.stringify(error, null, 2));
+    throw error;
+  }
+}
+
+export async function deleteMileage(mileageId: string) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      throw new Error("Usuário não autenticado");
+    }
+
+    const driverProfile = await prisma.driverProfile.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!driverProfile) {
+      throw new Error("Perfil de motorista não encontrado");
+    }
+
+    // Verificar se o registro pertence ao motorista
+    const mileage = await prisma.mileage.findUnique({
+      where: { id: mileageId },
+    });
+
+    if (!mileage || mileage.driverId !== driverProfile.id) {
+      throw new Error("Registro de quilometragem não encontrado");
+    }
+
+    await prisma.mileage.delete({
+      where: { id: mileageId },
+    });
+
+    revalidatePath("/driver/mileage");
+    return { success: true };
+  } catch (error) {
+    console.error("Erro ao deletar registro:", JSON.stringify(error, null, 2));
+    throw error;
+  }
+}
+
 export async function getMileageStats() {
   try {
     const session = await auth.api.getSession({

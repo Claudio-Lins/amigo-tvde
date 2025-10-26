@@ -21,5 +21,24 @@ export const FinishMileageSchema = z.object({
     .optional(),
 });
 
+export const EditMileageSchema = z.object({
+  mileageId: z.string(),
+  kmInitialDaily: z.coerce.number().min(0, "Quilometragem não pode ser negativa").max(999999, "Quilometragem inválida"),
+  kmFinalDaily: z.coerce.number().min(0, "Quilometragem não pode ser negativa").max(999999, "Quilometragem inválida"),
+  kmInitialWeekly: z.coerce
+    .number()
+    .min(0, "Quilometragem não pode ser negativa")
+    .max(999999, "Quilometragem inválida")
+    .nullable()
+    .optional(),
+  kmFinalWeekly: z.coerce
+    .number()
+    .min(0, "Quilometragem não pode ser negativa")
+    .max(999999, "Quilometragem inválida")
+    .nullable()
+    .optional(),
+});
+
 export type StartMileageInput = z.infer<typeof StartMileageSchema>;
 export type FinishMileageInput = z.infer<typeof FinishMileageSchema>;
+export type EditMileageInput = z.infer<typeof EditMileageSchema>;
