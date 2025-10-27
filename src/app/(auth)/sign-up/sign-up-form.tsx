@@ -52,22 +52,23 @@ export function SignUpForm() {
   async function onSubmit({ email, password, fullName, acceptedTerms }: SignUpValues) {
     setError(null);
 
-    const { error } = await authClient.signUp.email(
-      {
-        email,
-        password,
-        fullName,
-        acceptedTerms,
-        callbackURL: "/email-verified",
-        ...(acceptedTerms && { acceptedTermsAt: new Date() }),
+    // Preparar dados do sign-up incluindo 'name' (campo padrão do Better Auth)
+    const signUpData = {
+      email,
+      password,
+      name: fullName, // Campo padrão do Better Auth
+      fullName, // Campo adicional customizado
+      acceptedTerms,
+      callbackURL: "/email-verified",
+      ...(acceptedTerms && { acceptedTermsAt: new Date() }),
+    };
+
+    const { error } = await authClient.signUp.email(signUpData as Parameters<typeof authClient.signUp.email>[0], {
+      onSuccess: () => {
+        toast.success("Account created successfully");
+        router.push("/");
       },
-      {
-        onSuccess: () => {
-          toast.success("Account created successfully");
-          router.push("/");
-        },
-      },
-    );
+    });
     if (error) {
       setError(error.message || "Something went wrong");
     }
