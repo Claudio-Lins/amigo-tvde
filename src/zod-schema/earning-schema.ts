@@ -43,6 +43,24 @@ export const CreateEarningBatchSchema = EarningBatchSchema.omit({ id: true, crea
 export const EditEarningBatchSchema = EarningBatchSchema.omit({ createdAt: true, updatedAt: true });
 
 // =========================
+// DAILY EARNING SCHEMAS (para forms)
+// =========================
+export const CreateDailyEarningSchema = z.object({
+  date: z.date(),
+  source: EarningSourceSchema,
+  description: z.string().optional(),
+  amount: z.number().min(0.01, "Valor deve ser maior que zero"),
+});
+
+export const EditDailyEarningSchema = z.object({
+  earningId: z.string(),
+  date: z.date().optional(),
+  source: EarningSourceSchema.optional(),
+  description: z.string().optional(),
+  amount: z.number().min(0.01, "Valor deve ser maior que zero").optional(),
+});
+
+// =========================
 // TYPES
 // =========================
 export type Earning = z.infer<typeof EarningSchema>;

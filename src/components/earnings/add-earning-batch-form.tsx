@@ -76,29 +76,32 @@ export function AddEarningBatchForm() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Novo Lote de Ganhos
+        <Button className="gap-2 text-xs sm:text-sm w-full sm:w-auto">
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+          <span className="hidden xs:inline">Novo Lote de Ganhos</span>
+          <span className="xs:hidden">Lote Semanal</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Registrar Lote de Ganhos Semanal</DialogTitle>
-          <DialogDescription>Registre o pagamento semanal recebido da plataforma</DialogDescription>
+      <DialogContent className="w-[95vw] max-w-[600px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+        <DialogHeader className="space-y-2 sm:space-y-3">
+          <DialogTitle className="text-lg sm:text-xl">Registrar Lote de Ganhos Semanal</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
+            Registre o pagamento semanal recebido da plataforma
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
             {/* Fonte */}
             <FormField
               control={form.control}
               name="source"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Fonte *</FormLabel>
+                  <FormLabel className="text-sm">Fonte *</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9 sm:h-10">
                         <SelectValue placeholder="Selecione a plataforma" />
                       </SelectTrigger>
                     </FormControl>
@@ -114,23 +117,26 @@ export function AddEarningBatchForm() {
               )}
             />
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
               {/* Semana Início */}
               <FormField
                 control={form.control}
                 name="weekStart"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Início da Semana *</FormLabel>
+                    <FormLabel className="text-sm">Início da Semana *</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant="outline"
-                            className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal h-9 sm:h-10 text-sm",
+                              !field.value && "text-muted-foreground",
+                            )}
                           >
                             {field.value ? format(field.value, "PPP", { locale: ptBR }) : "Selecione"}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            <CalendarIcon className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -155,16 +161,19 @@ export function AddEarningBatchForm() {
                 name="weekEnd"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Fim da Semana *</FormLabel>
+                    <FormLabel className="text-sm">Fim da Semana *</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant="outline"
-                            className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal h-9 sm:h-10 text-sm",
+                              !field.value && "text-muted-foreground",
+                            )}
                           >
                             {field.value ? format(field.value, "PPP", { locale: ptBR }) : "Selecione"}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            <CalendarIcon className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -190,43 +199,46 @@ export function AddEarningBatchForm() {
               name="totalAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Valor Total *</FormLabel>
+                  <FormLabel className="text-sm">Valor Total *</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">€</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">€</span>
                       <Input
                         type="number"
                         step="0.01"
                         {...field}
                         onChange={(e) => field.onChange(e.target.value === "" ? 0 : Number(e.target.value))}
-                        className="pl-7"
+                        className="pl-7 h-9 sm:h-10 text-sm"
                         placeholder="0.00"
                       />
                     </div>
                   </FormControl>
-                  <FormDescription>Valor líquido recebido da plataforma</FormDescription>
+                  <FormDescription className="text-xs">Valor líquido recebido da plataforma</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
               {/* Data do Pagamento */}
               <FormField
                 control={form.control}
                 name="paymentDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Data do Pagamento *</FormLabel>
+                    <FormLabel className="text-sm">Data do Pagamento *</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant="outline"
-                            className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal h-9 sm:h-10 text-sm",
+                              !field.value && "text-muted-foreground",
+                            )}
                           >
                             {field.value ? format(field.value, "PPP", { locale: ptBR }) : "Selecione"}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            <CalendarIcon className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -251,10 +263,10 @@ export function AddEarningBatchForm() {
                 name="paymentType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo de Pagamento *</FormLabel>
+                    <FormLabel className="text-sm">Tipo de Pagamento *</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-9 sm:h-10">
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
                       </FormControl>
@@ -277,29 +289,39 @@ export function AddEarningBatchForm() {
               name="referenceId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referência (Opcional)</FormLabel>
+                  <FormLabel className="text-sm">Referência (Opcional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: ID da fatura, número de referência" {...field} />
+                    <Input
+                      placeholder="Ex: ID da fatura, número de referência"
+                      {...field}
+                      className="h-9 sm:h-10 text-sm"
+                    />
                   </FormControl>
-                  <FormDescription>Número de fatura ou referência da plataforma</FormDescription>
+                  <FormDescription className="text-xs">Número de fatura ou referência da plataforma</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
+            <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsOpen(false)}
+                disabled={isLoading}
+                className="w-full sm:w-auto h-9 sm:h-10 text-sm"
+              >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isLoading} className="gap-2">
+              <Button type="submit" disabled={isLoading} className="gap-2 w-full sm:w-auto h-9 sm:h-10 text-sm">
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                     Registrando...
                   </>
                 ) : (
                   <>
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                     Registrar
                   </>
                 )}
