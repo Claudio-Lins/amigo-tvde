@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Car, MapPin, Receipt, Route, User } from "lucide-react";
+import { Car, MapPin, Route, User } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +16,7 @@ export default async function DriverProfile() {
     redirect("/driver");
   }
 
-  const initials = `${driverProfile.firstName[0]}${driverProfile.lastName[0]}`.toUpperCase();
+  const initials = `${driverProfile.firstName?.[0] || ""}${driverProfile.lastName?.[0] || ""}`.toUpperCase() || "??";
 
   return (
     <div className="flex flex-col gap-6">
@@ -41,16 +41,14 @@ export default async function DriverProfile() {
               <Avatar className="h-24 w-24">
                 <AvatarImage
                   src={driverProfile.photo || driverProfile.user.image || undefined}
-                  alt={driverProfile.firstName}
+                  alt={driverProfile.user.name || ""}
                 />
                 <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-3">
                 <div>
-                  <h2 className="text-2xl font-bold">
-                    {driverProfile.firstName} {driverProfile.lastName}
-                  </h2>
-                  <p className="text-muted-foreground">{driverProfile.user.email}</p>
+                  <h2 className="text-2xl font-bold">{driverProfile.user.name || ""}</h2>
+                  <p className="text-muted-foreground">{driverProfile.user.email || ""}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="secondary" className="gap-1">
@@ -77,7 +75,7 @@ export default async function DriverProfile() {
               <Car className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{driverProfile._count.cars}</div>
+              <div className="text-2xl font-bold">{driverProfile._count.cars || 0}</div>
               <p className="text-xs text-muted-foreground">Veículos atribuídos</p>
             </CardContent>
           </Card>
@@ -88,7 +86,7 @@ export default async function DriverProfile() {
               <Route className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{driverProfile._count.mileage}</div>
+              <div className="text-2xl font-bold">{driverProfile._count.mileage || 0}</div>
               <p className="text-xs text-muted-foreground">Registros de KM</p>
             </CardContent>
           </Card>
@@ -96,10 +94,10 @@ export default async function DriverProfile() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Alimentação</CardTitle>
-              <Receipt className="h-4 w-4 text-muted-foreground" />
+              <Car className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{driverProfile._count.foodExpenses}</div>
+              <div className="text-2xl font-bold">{driverProfile._count.foodExpenses || 0}</div>
               <p className="text-xs text-muted-foreground">Despesas registradas</p>
             </CardContent>
           </Card>
@@ -110,7 +108,7 @@ export default async function DriverProfile() {
               <Car className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{driverProfile._count.energyLogs}</div>
+              <div className="text-2xl font-bold">{driverProfile._count.energyLogs || 0}</div>
               <p className="text-xs text-muted-foreground">Registros de energia</p>
             </CardContent>
           </Card>
@@ -121,7 +119,7 @@ export default async function DriverProfile() {
       <EditDriverProfileForm profile={driverProfile} />
 
       {/* Vehicles Section */}
-      {driverProfile.cars.length > 0 && (
+      {driverProfile.cars && driverProfile.cars.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
