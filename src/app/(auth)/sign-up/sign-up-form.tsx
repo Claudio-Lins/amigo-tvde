@@ -52,19 +52,24 @@ export function SignUpForm() {
   async function onSubmit({ email, password, fullName, acceptedTerms }: SignUpValues) {
     setError(null);
 
-    const { error } = await authClient.signUp.email({
-      email,
-      password,
-      fullName,
-      acceptedTerms,
-      callbackURL: "/email-verified",
-      ...(acceptedTerms && { acceptedTermsAt: new Date() }),
-    });
+    const { error } = await authClient.signUp.email(
+      {
+        email,
+        password,
+        fullName,
+        acceptedTerms,
+        callbackURL: "/email-verified",
+        ...(acceptedTerms && { acceptedTermsAt: new Date() }),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Account created successfully");
+          router.push("/dashboard");
+        },
+      },
+    );
     if (error) {
       setError(error.message || "Something went wrong");
-    } else {
-      toast.success("Account created successfully");
-      router.push("/dashboard");
     }
   }
 
